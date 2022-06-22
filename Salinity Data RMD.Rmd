@@ -1,0 +1,66 @@
+---
+title: "Salinity Data"
+author: "Cindy Chu"
+date: "6/8/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1. Download data
+Downloaded to PINC_Summer_Program folder
+
+## 2. Create new RMD file
+Done!
+
+## 3. Read data into R
+```{r}
+# 'Data' variable name caused error so changed it to 'Salinity'
+# also <- didn't work, use = to assign variables!
+Salinity = read.csv("DataSalinity_SFbar_FortPoint.csv")
+
+summary(Salinity)
+```
+
+## 4. Make sure dates are recognized as dates
+```{r}
+#install.packages("chron")
+library(chron)
+
+Salinity$Date = as.chron(Salinity$Date)
+
+summary(Salinity$Date)
+```
+
+## 5. Plot date vs salinity
+```{r}
+plot(x = Salinity$Date, y = Salinity$Salinity, col = "purple")
+```
+
+## 6. Add date for Oct 24th, 2021
+```{r}
+plot(x = Salinity$Date, y = Salinity$Salinity, col = "purple")
+abline(v = as.chron("10/24/2021"))
+```
+## GG plot facet wrap
+```{r}
+library(ggplot2)
+
+myplot = ggplot(Salinity, aes(Date, WaterTemp))
+myplot + geom_point(col = "blue") +
+  scale_x_chron() +
+  geom_vline(xintercept = as.chron("10/24/2021"), linetype = 2, color = "red", size = 1) +
+  facet_wrap(~Location)
+```
+
+## GG plot color for location
+```{r}
+library(ggplot2)
+
+myplot = ggplot(Salinity, aes(Date, WaterTemp))
+myplot + geom_point(aes(col = Location), alpha = 0.1) +
+  scale_x_chron() +
+  geom_vline(xintercept = as.chron("10/24/2021"), linetype = 2, color = "red", size = 1)
+```
